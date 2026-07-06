@@ -53,19 +53,9 @@ func MyAPI(ip string, timeout time.Duration, _ string, _ bool) (*IPGeoData, erro
 	owner := geo.Get("org").String()
 	isp := geo.Get("isp").String()
 
-	// Anycast 特殊处理
-	if geo.Get("is_anycast").Bool() {
-		return &IPGeoData{
-			Asnumber: asn,
-			Country:  "ANYCAST",
-			Prov:     "ANYCAST",
-			Owner:    owner,
-			Isp:      isp,
-		}, nil
-	}
-
 	// 构建 privacy/threat/proxy 紧凑标签，追加到 Owner 末尾
-	tags := buildMyAPITags(res)
+	// Anycast 也作为标签保留，不覆盖真实 geo 数据
+	tags := buildMyAPITags(res, geo.Get("is_anycast").Bool())
 	if tags != "" {
 		if owner != "" {
 			owner += " " + tags
@@ -95,8 +85,13 @@ func MyAPI(ip string, timeout time.Duration, _ string, _ bool) (*IPGeoData, erro
 
 // buildMyAPITags 从 privacy/threat_intelligence/proxy_intelligence 生成紧凑标签
 // 例如: "[DC] [Threat:webattack,ddos] [Proxy]"
-func buildMyAPITags(res gjson.Result) string {
+func buildMyAPITags(res gjson.Result, isAnycast bool) string {
 	var tags []string
+
+	// Anycast 标签
+	if isAnycast {
+		tags = append(tags, "[Anycast]")
+	}
 
 	// privacy 标签
 	privacy := res.Get("privacy")
