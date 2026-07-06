@@ -32,6 +32,8 @@ type Source = func(ip string, timeout time.Duration, lang string, maptrace bool)
 
 func GetSource(s string) Source {
 	switch strings.ToUpper(s) {
+	case "MYAPI":
+		return MyAPI
 	case "DN42":
 		return DN42
 	case "LEOMOEAPI":

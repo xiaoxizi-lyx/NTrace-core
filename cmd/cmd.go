@@ -1218,8 +1218,8 @@ func Execute() {
 	maxAttempts := parser.Int("", "max-attempts", &argparse.Options{Help: buildMaxAttemptsHelp()})
 	parallelRequests := parser.Int("", "parallel-requests", &argparse.Options{Default: 18, Help: buildParallelRequestsHelp()})
 	maxHops := parser.Int("m", "max-hops", &argparse.Options{Default: 30, Help: "Set the max number of hops (max TTL to be reached)"})
-	dataOrigin := parser.Selector("d", "data-provider", []string{"IP.SB", "ip.sb", "IPInfo", "ipinfo", "IPInsight", "ipinsight", "IPAPI.com", "ip-api.com", "IPInfoLocal", "ipinfolocal", "chunzhen", "LeoMoeAPI", "leomoeapi", "ipdb.one", "disable-geoip"}, &argparse.Options{Default: "LeoMoeAPI",
-		Help: "Choose IP Geograph Data Provider [IP.SB, IPInfo, IPInsight, IP-API.com, IPInfoLocal, CHUNZHEN, disable-geoip]"})
+	dataOrigin := parser.Selector("d", "data-provider", []string{"MyAPI", "myapi", "IP.SB", "ip.sb", "IPInfo", "ipinfo", "IPInsight", "ipinsight", "IPAPI.com", "ip-api.com", "IPInfoLocal", "ipinfolocal", "chunzhen", "LeoMoeAPI", "leomoeapi", "ipdb.one", "disable-geoip"}, &argparse.Options{Default: "MyAPI",
+		Help: "Choose IP Geograph Data Provider [MyAPI, IP.SB, IPInfo, IPInsight, IP-API.com, IPInfoLocal, CHUNZHEN, LeoMoeAPI, disable-geoip]"})
 	powProvider := parser.Selector("", "pow-provider", []string{"api.nxtrace.org", "sakura"}, &argparse.Options{Default: "api.nxtrace.org",
 		Help: "Choose PoW Provider [api.nxtrace.org, sakura] For China mainland users, please use sakura"})
 	norDNS := parser.Flag("n", "no-rdns", &argparse.Options{Help: "Do not resolve IP addresses to their domain names"})
