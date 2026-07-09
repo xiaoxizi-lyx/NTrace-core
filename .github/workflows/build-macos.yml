@@ -1,0 +1,41 @@
+name: Build macOS arm64 binary
+
+# 触发方式：手动触发，或 push 到指定分支时触发
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - macbuild   # 如果你的默认分支不是 main，改成对应分支名
+
+jobs:
+  build-macos-arm64:
+    # macos-14 / macos-latest 目前是 Apple Silicon (arm64) runner
+    runs-on: macos-14
+
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.4'   # 按需改成你项目要求的 Go 版本
+          cache: true
+
+      - name: 安装 libpcap（一般 macOS 自带，但装一下更保险）
+        run: |
+          brew install libpcap || true
+
+      - name: 编译（本机编译，天然支持 cgo）
+        env:
+          CGO_ENABLED: 1
+          GOOS: darwin
+          GOARCH: arm64
+        run: |
+          go build -o nt -v .
+
+      - name: 上传编译产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: nt-darwin-arm64
+          path: nt
